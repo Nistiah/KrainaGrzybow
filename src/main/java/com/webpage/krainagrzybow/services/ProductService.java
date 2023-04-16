@@ -1,7 +1,7 @@
 package com.webpage.krainagrzybow.services;
 
-import com.webpage.krainagrzybow.dto.models.Product;
-import com.webpage.krainagrzybow.dto.repositories.ProductRepository;
+import com.webpage.krainagrzybow.rdbms.models.Product;
+import com.webpage.krainagrzybow.rdbms.repositories.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

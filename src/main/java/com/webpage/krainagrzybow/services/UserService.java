@@ -1,7 +1,8 @@
 package com.webpage.krainagrzybow.services;
 
-import com.webpage.krainagrzybow.dto.models.User;
-import com.webpage.krainagrzybow.dto.repositories.UserRepository;
+import com.webpage.krainagrzybow.enums.Role;
+import com.webpage.krainagrzybow.rdbms.models.User;
+import com.webpage.krainagrzybow.rdbms.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,7 +14,7 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public void addNewUser(String name, String email, String password, String role) {
+    public void addNewUser(String name, String email, String password, Role role) {
         User user = new User();
         user.setName(name);
         user.setEmail(email);

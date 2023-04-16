@@ -1,6 +1,6 @@
 package com.webpage.krainagrzybow.controllers;
 
-import com.webpage.krainagrzybow.dto.models.Product;
+import com.webpage.krainagrzybow.rdbms.models.Product;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;

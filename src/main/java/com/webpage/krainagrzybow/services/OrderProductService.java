@@ -3,16 +3,17 @@ package com.webpage.krainagrzybow.services;
 import com.webpage.krainagrzybow.rdbms.models.OrderProduct;
 import com.webpage.krainagrzybow.rdbms.models.Product;
 import com.webpage.krainagrzybow.rdbms.repositories.OrderProductRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderProductService {
 
-    @Autowired
-    private OrderProductRepository orderProductRepository;
+    private final OrderProductRepository orderProductRepository;
 
     public void addNewOrderProduct(Long orderId, Product product, Integer quantity) {
         OrderProduct orderProduct = new OrderProduct();

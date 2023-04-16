@@ -1,6 +1,8 @@
 package com.webpage.krainagrzybow.controllers;
 
 import com.webpage.krainagrzybow.rdbms.models.Product;
+import com.webpage.krainagrzybow.services.ProductService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -9,11 +11,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Controller
-@ConfigurationProperties("items")
+@RequiredArgsConstructor
+//@ConfigurationProperties("items")
 public class ProductController {
+
+  private final ProductService productService;
+
   @RequestMapping("/itemsList")
   public List<Product> showItems() {
-    return products;
+    return productService.getAllProducts();
   }
   public List<Product> getItems() {
     return products;

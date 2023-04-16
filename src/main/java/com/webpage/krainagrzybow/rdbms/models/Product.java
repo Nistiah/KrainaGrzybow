@@ -37,8 +37,8 @@ public class Product {
     @Column(name = "image")
     private String image;
 
-    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<OrderProduct> orderProducts; //??? czy to jest potrzebne?
+//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+//    private List<OrderProduct> orderProducts; //??? czy to jest potrzebne?
 
 }
 

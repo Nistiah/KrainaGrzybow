@@ -2,16 +2,17 @@ package com.webpage.krainagrzybow.services;
 
 import com.webpage.krainagrzybow.rdbms.models.Order;
 import com.webpage.krainagrzybow.rdbms.repositories.OrderRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class OrderService {
 
-    @Autowired
-    private OrderRepository orderRepository;
+    private final OrderRepository orderRepository;
 
     public Order saveOrder(Order order) {
         return orderRepository.save(order);

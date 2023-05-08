@@ -7,13 +7,17 @@ import jakarta.ws.rs.core.MediaType;
 import jakarta.ws.rs.core.Response;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping
     public class PaysafecardController {
 
     @GetMapping("/api/payments/paysafecard")

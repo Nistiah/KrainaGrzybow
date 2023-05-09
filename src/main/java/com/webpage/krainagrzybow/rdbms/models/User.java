@@ -16,7 +16,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-    @NotNull
+//    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -44,7 +44,7 @@ public class User {
 
 //    @CollectionTable(name = "orders")   //??????
     @OneToMany
-    @CollectionTable(name = "orders")
+    @JoinColumn(name = "id", referencedColumnName = "id")
     private List<Order> orders;
 
 

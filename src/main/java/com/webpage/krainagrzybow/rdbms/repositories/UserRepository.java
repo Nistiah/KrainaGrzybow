@@ -6,4 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 public interface UserRepository extends JpaRepository<User, Long> {
     ///TODO: do ogarniecia custom query
     Long findIdByEmail(String email); //???? jak to niby ma dzialac?
+
+    User findByEmail(String email);
+
+    User findById(long id);
 }

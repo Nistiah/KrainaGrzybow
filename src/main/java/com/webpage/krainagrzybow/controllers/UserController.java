@@ -2,11 +2,13 @@ package com.webpage.krainagrzybow.controllers;
 
 import com.webpage.krainagrzybow.dtos.OrderDto;
 import com.webpage.krainagrzybow.dtos.UserDto;
+import com.webpage.krainagrzybow.rdbms.models.Order;
+import com.webpage.krainagrzybow.services.OrderService;
 import com.webpage.krainagrzybow.services.UserService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
+import lombok.RequiredArgsConstructor;
 
 @Controller
 @RequiredArgsConstructor
@@ -15,8 +17,10 @@ public class UserController {
 
     private final UserService userService;
 
+    private final OrderService orderService;
+
     @Controller
-    @RequestMapping("/account")
+    @RequestMapping("/client/account")
     public class ProfileController {
 
         @GetMapping("/accountData/{userId}")
@@ -24,8 +28,15 @@ public class UserController {
             try {
                 return ResponseEntity.ok(userService.findUserById(userId));
             } catch (Exception e) {
+                System.out.println("dupsko");
+                e.printStackTrace();
                 return ResponseEntity.notFound().build();
             }
+        }
+
+        @GetMapping("/test")
+        public ResponseEntity<String> test() {
+            return ResponseEntity.ok("test");
         }
 
         @PostMapping("/changeName")
@@ -47,33 +58,29 @@ public class UserController {
                 return ResponseEntity.notFound().build();
             }
         }
-
-
-//        @GetMapping("/accountDataById/{userId}")
-//        public UserDto getAccountData(@PathVariable Long userId) {
-//            try {
-//                return userService.findUserById(userId);
-//            } catch (Exception e) {
-//                return null;
-//            }
-//        }
     }
 
     //TODO: implement cart
-//    @Controller
-//    @RequestMapping("/cart")
-//    public class CartController {
-//
-//        @GetMapping("/cartData/{userId}")
-//        public ResponseEntity<OrderDto> getCartData(@PathVariable Long userId) {
-//            try {
-//                return ResponseEntity.ok(userService.findUserById(userId));
-//            } catch (Exception e) {
-//                return ResponseEntity.notFound().build();
-//            }
-//        }
-//    }
+    @Controller
+    @RequestMapping("/client/cart")
+    public class CartController {
+
+        @GetMapping("/cartData/{userId}")
+        public ResponseEntity<OrderDto> getCartData(@PathVariable Long userId) {
+            try {
+                return ResponseEntity.ok(orderService.getCartByUserId(userId));
+            } catch (Exception e) {
+                System.out.println("dupsko");
+                e.printStackTrace();
+                return ResponseEntity.notFound().build();
+            }
+        }
+
+        @GetMapping("/test")
+        public ResponseEntity<String> test() {
+            return ResponseEntity.ok("test");
+        }
 
 
-
+    }
 }

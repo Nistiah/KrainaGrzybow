@@ -7,14 +7,19 @@ import org.springframework.stereotype.Component;
 @Component
 public class OrderMapper {
 
-    private OrderDto mapToDto(Order order) {
+    public final OrderProductMapper orderProductMapper = new OrderProductMapper();
+
+    public OrderDto mapToDto(Order order) {
+        System.out.println(order.getOrderProducts());
+        System.out.println(order.getOrderProducts().stream().map(orderProductMapper::mapToDto).toList());
+
         return OrderDto
                 .builder()
                 .id(order.getId())
-                .user(order.getUser())
-                .orderDate(order.getOrderDate())
+                .orderProducts(order.getOrderProducts().stream().map(orderProductMapper::mapToDto).toList())
                 .orderStatus(order.getStatus())
-                .orderProducts(order.getOrderProducts())
                 .build();
     }
+
+
 }

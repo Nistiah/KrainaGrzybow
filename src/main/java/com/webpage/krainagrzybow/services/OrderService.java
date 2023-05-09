@@ -1,5 +1,8 @@
 package com.webpage.krainagrzybow.services;
 
+import com.webpage.krainagrzybow.dtos.OrderDto;
+import com.webpage.krainagrzybow.enums.Status;
+import com.webpage.krainagrzybow.mappers.OrderMapper;
 import com.webpage.krainagrzybow.rdbms.models.Order;
 import com.webpage.krainagrzybow.rdbms.repositories.OrderRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,6 +17,8 @@ public class OrderService {
 
     private final OrderRepository orderRepository;
 
+    private final OrderMapper orderMapper;
+
     public Order saveOrder(Order order) {
         return orderRepository.save(order);
     }
@@ -22,13 +27,24 @@ public class OrderService {
         orderRepository.deleteById(id);
     }
 
-    public List<Order> findAllOrders() {
-        return orderRepository.findAll();
+    public List<OrderDto> findAllOrders() {
+        return orderRepository.findAll().stream().map(orderMapper::mapToDto).toList();
     }
 
-    public Order findOrderById(Long id) {
-        return orderRepository.findById(id).orElse(null);
+    public OrderDto findOrderById(Long id) {
+        return orderMapper.mapToDto(orderRepository.findById(id).orElse(null));
     }
+
+    public OrderDto getCartByUserId(Long id) {
+
+            return orderMapper.mapToDto(orderRepository.findByUserIdAndStatus(id, Status.NEW));
+
+//        return orderRepository.findByUserIdAndStatus(id, Status.NEW);
+
+//        return orderRepository.findByUserIdAndStatus(id,  Status.NEW);
+    }
+
+
 
 }
 

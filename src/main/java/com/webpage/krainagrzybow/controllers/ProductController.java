@@ -1,5 +1,6 @@
 package com.webpage.krainagrzybow.controllers;
 
+import com.webpage.krainagrzybow.dtos.ProductDto;
 import com.webpage.krainagrzybow.rdbms.models.Product;
 import com.webpage.krainagrzybow.services.ProductService;
 import lombok.RequiredArgsConstructor;
@@ -10,7 +11,7 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
+import org.springframework.data.domain.Pageable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,26 +25,9 @@ public class ProductController {
   private final ProductService productService;
 
   @GetMapping("/itemsList")
-  public ResponseEntity<List<Product>> sayHelloAll() {
-    return ResponseEntity.ok(productService.getAllProducts());
-  }
-  public List<Product> getItems() {
-    return products;
-  }
-
-  public void setItems(List<Product> products) {
-    this.products = products;
+  public ResponseEntity<List<ProductDto>> sayHelloAll(Pageable pageable) {
+    return ResponseEntity.ok(productService.getAllProducts(pageable));
   }
 
 
-  private List<Product> products = new ArrayList<>();
-
-
-//  @Controller
-//  public static class HomeController {
-//      @RequestMapping("/")
-//      public String welcome() {
-//          return "home";
-//      }
-//  }
 }

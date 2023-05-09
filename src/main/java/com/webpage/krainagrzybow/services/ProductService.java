@@ -1,9 +1,12 @@
 package com.webpage.krainagrzybow.services;
 
+import com.webpage.krainagrzybow.dtos.ProductDto;
+import com.webpage.krainagrzybow.mappers.ProductMapper;
 import com.webpage.krainagrzybow.rdbms.models.Product;
 import com.webpage.krainagrzybow.rdbms.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -14,6 +17,8 @@ import java.util.List;
 public class ProductService {
 
     private final ProductRepository productRepository;
+
+    private final ProductMapper productMapper;
 
     public void addNewProduct(String name, String description, String image, BigDecimal price) {
         Product product = new Product();
@@ -56,9 +61,13 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDto> getAllProducts(Pageable pageable) {
+
+        return productRepository.findAll(pageable).stream().map(productMapper::mapToDto).toList();
     }
+
+
+
     public Product getProductById(Long id) {
         return productRepository.findById(id).orElse(null);
     }

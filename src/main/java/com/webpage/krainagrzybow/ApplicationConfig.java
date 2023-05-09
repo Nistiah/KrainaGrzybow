@@ -41,10 +41,25 @@ public class ApplicationConfig  implements WebMvcConfigurer {
             product3.setPromotion(BigDecimal.valueOf( 1.0));
             product3.setImage("test3");
 
+            Product product4 = new Product();
+            product4.setName("test4");
+            product4.setDescription("test4test4test4test4");
+            product4.setPrice(BigDecimal.valueOf( 20.0));
+            product4.setPromotion(BigDecimal.valueOf( 1.0));
+            product4.setImage("test4");
+
+            Product product5 = new Product();
+            product5.setName("test5");
+            product5.setDescription("product5product5product5");
+            product5.setPrice(BigDecimal.valueOf( 200.0));
+            product5.setPromotion(BigDecimal.valueOf( 1.0));
+            product5.setImage("test5");
+
             productRepository.save(product);
             productRepository.save(product2);
             productRepository.save(product3);
-
+            productRepository.save(product4);
+            productRepository.save(product5);
 
 
 

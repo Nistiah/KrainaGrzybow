@@ -37,7 +37,6 @@ import java.util.Base64;
                 .get();
 
         String responseBody = response_check.readEntity(String.class);
-        System.out.println("status: " + responseBody);
 /*
         //CHECK PAYMENT METHODS
         response_check = client_check.target("https://api.test.paysafe.com/paymenthub/v1/paymentmethods?currencyCode=USD")

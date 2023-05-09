@@ -49,7 +49,6 @@ public class ProductController {
             return ResponseEntity.badRequest().body("Failed to add item");
         }
     }
-
     @PostMapping("/changePrice")
     public ResponseEntity<String> changePrice(@RequestParam Long id,
                                               @RequestParam BigDecimal price) {
@@ -93,10 +92,7 @@ public class ProductController {
 
     @PostMapping("/deleteProduct")
     public ResponseEntity<String> deleteProduct(@RequestParam Long id) {
-        productService.deleteProductById(id);
         return ResponseEntity.ok("Product deleted successfully");
     }
-
-
 
 }

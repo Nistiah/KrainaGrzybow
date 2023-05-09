@@ -20,13 +20,15 @@ public class ProductService {
 
     private final ProductMapper productMapper;
 
-    public void addNewProduct(String name, String description, String image, BigDecimal price) {
+    public boolean addNewProduct(String name, String description, String image, BigDecimal price, BigDecimal promotion) {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
         product.setImage(image);
         product.setPrice(price);
+        product.setPromotion(promotion);
         productRepository.save(product);
+        return true;
     }
 
     public void changePrice(Long id, BigDecimal price) {
@@ -66,16 +68,16 @@ public class ProductService {
         return productRepository.findAll(pageable).stream().map(productMapper::mapToDto).toList();
     }
 
-
-
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+    public ProductDto getProductById(Long id) {
+        return productRepository.findById(id).map(productMapper::mapToDto).orElse(null);
     }
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    public boolean saveProduct(Product product) {
+        productRepository.save(product);
+        return true;
     }
-    public void deleteProductById(Long id) {
+    public boolean deleteProductById(Long id) {
         productRepository.deleteById(id);
+        return true;
     }
 }
 

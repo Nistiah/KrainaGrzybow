@@ -8,8 +8,10 @@ import jakarta.ws.rs.core.Response;
 import org.json.JSONArray;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.json.JSONObject;
 
@@ -18,6 +20,8 @@ import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:4200")
+@RequestMapping
     public class PaysafecardController {
 
     static String BackupRefnum = "1674816477305";
@@ -170,6 +174,8 @@ import java.util.Base64;
         JSONObject body = PaymentHandleCreator(merchantRefNum, amount, "Customer1");
 
         Response response = client.target("https://api.test.paysafe.com/paymenthub/v1/paymenthandles")
+
+        response_check = client_check.target("https://api.test.paysafe.com/paymenthub/v1/paymentmethods?currencyCode=USD")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .header("Authorization", authHeader)
                 .header("Content-Type", MediaType.APPLICATION_JSON)

@@ -1,5 +1,6 @@
 package com.webpage.krainagrzybow.services;
 
+import com.webpage.krainagrzybow.rdbms.models.Order;
 import com.webpage.krainagrzybow.rdbms.models.OrderProduct;
 import com.webpage.krainagrzybow.rdbms.models.Product;
 import com.webpage.krainagrzybow.rdbms.repositories.OrderProductRepository;
@@ -14,6 +15,15 @@ import java.util.List;
 public class OrderProductService {
 
     private final OrderProductRepository orderProductRepository;
+
+    public boolean addOrderProductToOrder(OrderProduct orderProduct, Order order) {
+        orderProduct.setOrder(order);
+
+        order.getOrderProducts().add(orderProduct);
+        orderProductRepository.save(orderProduct);
+        return true;
+    }
+
 
     public void addNewOrderProduct(Long orderId, Product product, Integer quantity) {
         OrderProduct orderProduct = new OrderProduct();

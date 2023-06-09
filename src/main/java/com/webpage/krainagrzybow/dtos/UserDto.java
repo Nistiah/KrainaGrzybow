@@ -26,9 +26,6 @@ public class UserDto {
     private String email;
 
     @NotNull
-    private List<Order> orders;
-
-    @NotNull
     private Role role;
 
     @NotNull

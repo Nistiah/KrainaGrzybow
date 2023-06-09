@@ -6,7 +6,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class ProductMapper {
-    private ProductDto mapToDto(Product product) {
+    public ProductDto mapToDto(Product product) {
         return ProductDto
                 .builder()
                 .id(product.getId())

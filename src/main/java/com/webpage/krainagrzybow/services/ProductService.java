@@ -1,9 +1,12 @@
 package com.webpage.krainagrzybow.services;
 
+import com.webpage.krainagrzybow.dtos.ProductDto;
+import com.webpage.krainagrzybow.mappers.ProductMapper;
 import com.webpage.krainagrzybow.rdbms.models.Product;
 import com.webpage.krainagrzybow.rdbms.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -15,13 +18,17 @@ public class ProductService {
 
     private final ProductRepository productRepository;
 
-    public void addNewProduct(String name, String description, String image, BigDecimal price) {
+    private final ProductMapper productMapper;
+
+    public boolean addNewProduct(String name, String description, String image, BigDecimal price, BigDecimal promotion) {
         Product product = new Product();
         product.setName(name);
         product.setDescription(description);
         product.setImage(image);
         product.setPrice(price);
+        product.setPromotion(promotion);
         productRepository.save(product);
+        return true;
     }
 
     public void changePrice(Long id, BigDecimal price) {
@@ -56,17 +63,21 @@ public class ProductService {
         productRepository.save(product);
     }
 
-    public List<Product> getAllProducts() {
-        return productRepository.findAll();
+    public List<ProductDto> getAllProducts(Pageable pageable) {
+
+        return productRepository.findAll(pageable).stream().map(productMapper::mapToDto).toList();
     }
-    public Product getProductById(Long id) {
-        return productRepository.findById(id).orElse(null);
+
+    public ProductDto getProductById(Long id) {
+        return productRepository.findById(id).map(productMapper::mapToDto).orElse(null);
     }
-    public Product saveProduct(Product product) {
-        return productRepository.save(product);
+    public boolean saveProduct(Product product) {
+        productRepository.save(product);
+        return true;
     }
-    public void deleteProductById(Long id) {
+    public boolean deleteProductById(Long id) {
         productRepository.deleteById(id);
+        return true;
     }
 }
 

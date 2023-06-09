@@ -9,6 +9,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,23 +20,20 @@ import java.util.List;
 @NoArgsConstructor
 public class OrderDto {
 
-    @NotNull
+//    @NotNull
     private Long id;
 
-    @NotNull
-    private User user;
+//    @NotNull
+//    private User user;
 
-    @NotNull
+//    @NotNull
     private LocalDate orderDate;
 
-    @NotNull
-    private List<OrderProduct> orderProducts;
+    private List<OrderProductDto> orderProducts;
 
-    @NotNull
+//    @NotNull
     private Status orderStatus;
 
-    @NotNull
-    private Status status;
 
 
 

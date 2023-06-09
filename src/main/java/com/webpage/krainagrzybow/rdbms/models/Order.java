@@ -10,6 +10,7 @@ import jakarta.validation.constraints.NotNull;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,7 +23,7 @@ import java.util.List;
 @NoArgsConstructor
 public class Order {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
     @NotNull
@@ -30,13 +31,21 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @NotNull
+//    @NotNull
     @Column(name = "order_date")
     private LocalDate orderDate;
 
-    @NotNull
+//    @NotNull
     @OneToMany(mappedBy = "order")
-    private List<OrderProduct> orderProducts;
+    private List<OrderProduct> orderProducts = new ArrayList<>();
+
+//    public void addOrderProduct(OrderProduct orderProduct) {
+//        if(orderProducts == null)
+//            orderProducts = new ArrayList<>();
+//        orderProducts.add(orderProduct);
+//        orderProduct.setOrder(this);
+//
+//    }
 
     @NotNull
     private Status status;

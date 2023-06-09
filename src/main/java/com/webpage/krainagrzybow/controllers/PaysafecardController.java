@@ -174,8 +174,6 @@ import java.util.Base64;
         JSONObject body = PaymentHandleCreator(merchantRefNum, amount, "Customer1");
 
         Response response = client.target("https://api.test.paysafe.com/paymenthub/v1/paymenthandles")
-
-        response_check = client_check.target("https://api.test.paysafe.com/paymenthub/v1/paymentmethods?currencyCode=USD")
                 .request(MediaType.APPLICATION_JSON_TYPE)
                 .header("Authorization", authHeader)
                 .header("Content-Type", MediaType.APPLICATION_JSON)

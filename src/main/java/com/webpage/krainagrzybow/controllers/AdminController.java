@@ -1,7 +1,6 @@
 package com.webpage.krainagrzybow.controllers;
 
 import com.webpage.krainagrzybow.enums.Role;
-import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

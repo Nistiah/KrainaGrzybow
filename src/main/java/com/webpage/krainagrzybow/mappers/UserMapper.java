@@ -1,14 +1,11 @@
 package com.webpage.krainagrzybow.mappers;
 
-
 import com.webpage.krainagrzybow.dtos.UserDto;
 import com.webpage.krainagrzybow.rdbms.models.User;
 import org.springframework.stereotype.Component;
 
 @Component
 public class UserMapper {
-
-    private OrderMapper orderMapper;
     public UserDto mapToDto(User user) {
         return UserDto
                 .builder()
@@ -19,5 +16,4 @@ public class UserMapper {
                 .phoneNumber(user.getPhoneNumber())
                 .build();
     }
-
 }

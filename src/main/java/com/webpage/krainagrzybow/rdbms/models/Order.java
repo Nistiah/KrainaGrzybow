@@ -1,18 +1,12 @@
 package com.webpage.krainagrzybow.rdbms.models;
 
-
 import com.webpage.krainagrzybow.enums.Status;
 import jakarta.persistence.*;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.*;
 import jakarta.validation.constraints.NotNull;
+import lombok.*;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.util.ArrayList;
 import java.util.List;
-
 
 @Entity
 @Table(name = "orders")
@@ -25,30 +19,47 @@ public class Order {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
-
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
-
-//    @NotNull
-    @Column(name = "order_date")
-    private LocalDate orderDate;
-
-//    @NotNull
-    @OneToMany(mappedBy = "order")
-    private List<OrderProduct> orderProducts = new ArrayList<>();
-
-//    public void addOrderProduct(OrderProduct orderProduct) {
-//        if(orderProducts == null)
-//            orderProducts = new ArrayList<>();
-//        orderProducts.add(orderProduct);
-//        orderProduct.setOrder(this);
-//
-//    }
-
     @NotNull
+    @OneToMany
+    @JoinColumn(name = "order_products_id")
+    private List<OrderProduct> orderProductsList;
+    @Column(name = "status")
     private Status status;
+    @Column(name = "total_price")
+    private double totalPrice;
+    @Column(name = "address")
+    private String address;
+    @Column(name = "phone_number")
+    private String phoneNumber;
+    @Column(name = "placed_date")
+    private LocalDate date;
 
+    public boolean isProductInOrder(Long productId) {
+        return orderProductsList.stream()
+                .anyMatch(orderProduct -> orderProduct.getProduct().getId().equals(productId));
+    }
+
+    public OrderProduct
+    getOrderProductByProductId(Long productId) {
+        return orderProductsList.stream()
+                .filter(orderProduct -> orderProduct.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Order product not found"));
+    }
+
+    public List<OrderProduct> getAllOrderProducts() {
+        return orderProductsList;
+    }
+
+    public void addOrderProduct(OrderProduct orderProduct) {
+        orderProductsList.add(orderProduct);
+    }
+
+    public void removeOrderProduct(OrderProduct orderProduct) {
+        orderProductsList.remove(orderProduct);
+    }
 }
 

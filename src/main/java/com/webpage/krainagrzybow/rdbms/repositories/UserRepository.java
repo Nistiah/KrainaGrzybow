@@ -4,10 +4,13 @@ import com.webpage.krainagrzybow.rdbms.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface UserRepository extends JpaRepository<User, Long> {
-    ///TODO: do ogarniecia custom query
-    Long findIdByEmail(String email); //???? jak to niby ma dzialac?
+    Long findIdByEmail(String email);
 
     User findByEmail(String email);
 
+    User findByUsername(String username);
+
     User findById(long id);
+
+    boolean existsByEmail(String mail);
 }

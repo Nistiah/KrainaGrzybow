@@ -16,7 +16,6 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 public class User {
-//    @NotNull
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -34,19 +33,11 @@ public class User {
     private String password;
 
     @NotNull
-    @Enumerated
     @Column(name = "role")
     private Role role;
 
-
     @Column(name = "phone_number")
     private String phoneNumber;
-
-//    @CollectionTable(name = "orders")   //??????
-    @OneToMany
-    @JoinColumn(name = "id", referencedColumnName = "id")
-    private List<Order> orders;
-
 
 }
 

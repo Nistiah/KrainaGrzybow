@@ -26,29 +26,31 @@ public class Order {
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @NotNull
     @ManyToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-//    @NotNull
-    @Column(name = "order_date")
-    private LocalDate orderDate;
-
-//    @NotNull
-    @OneToMany(mappedBy = "order")
-    private List<OrderProduct> orderProducts = new ArrayList<>();
-
-//    public void addOrderProduct(OrderProduct orderProduct) {
-//        if(orderProducts == null)
-//            orderProducts = new ArrayList<>();
-//        orderProducts.add(orderProduct);
-//        orderProduct.setOrder(this);
-//
-//    }
-
     @NotNull
+    @OneToMany
+    @JoinColumn(name = "order_products_id")
+    private List<OrderProduct> orderProductsList;
+
+
+    @Column(name = "status")
     private Status status;
+
+    @Column(name = "total_price")
+    private double totalPrice;
+
+    @Column(name = "address")
+    private String address;
+
+    @Column(name = "phone_number")
+    private String phoneNumber;
+
+    @Column(name = "placed_date")
+    private LocalDate date;
+
 
 }
 

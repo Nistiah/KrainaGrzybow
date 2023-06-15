@@ -3,6 +3,7 @@ package com.webpage.krainagrzybow.rdbms.models;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
 import lombok.*;
+import org.hibernate.validator.constraints.Length;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -24,6 +25,7 @@ public class Product {
     @Column(name = "name")
     private String name;
 
+    @Length(max = 1000)
     @Column(name = "description")
     private String description;
 
@@ -37,8 +39,12 @@ public class Product {
     @Column(name = "image")
     private String image;
 
-//    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-//    private List<OrderProduct> orderProducts; //??? czy to jest potrzebne?
+    @OneToMany(mappedBy = "product", cascade = CascadeType.REMOVE)
+    private List<OrderProduct> orderProducts;
+
+    private boolean isAvaiable = false;
+
+    private boolean isDeleted = false;
 
 }
 

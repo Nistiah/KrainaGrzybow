@@ -5,20 +5,19 @@ import com.webpage.krainagrzybow.mappers.ProductMapper;
 import com.webpage.krainagrzybow.rdbms.models.Product;
 import com.webpage.krainagrzybow.rdbms.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.io.File;
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ProductService {
-
     private final ProductRepository productRepository;
-
     private final ProductMapper productMapper;
 
     public boolean addNewProduct(String name, String description, String image, BigDecimal price, BigDecimal promotion) {
@@ -57,8 +56,21 @@ public class ProductService {
         return productRepository.findAllByIsDeleted(false, pageable).map(productMapper::mapToDto);
     }
 
-
-
+    public List<String> getAllImages() {
+        List<String> fileNames = new ArrayList<>();
+        File folder = new File("src/main/resources/static/img");
+        if (folder.exists() && folder.isDirectory()) {
+            File[] files = folder.listFiles();
+            if (files != null) {
+                for (File file : files) {
+                    if (file.isFile()) {
+                        fileNames.add(file.getName());
+                    }
+                }
+            }
+        }
+        return fileNames;
+    }
 //
 //
 //    public void changePrice(Long id, BigDecimal price) {

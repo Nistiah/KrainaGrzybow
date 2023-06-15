@@ -11,5 +11,4 @@ public class ChangeUserDetailsRequest {
     private String newUsername;
     private String newEmail;
     private String password;
-
 }

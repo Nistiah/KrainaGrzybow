@@ -24,15 +24,11 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-
 @Service
 @RequiredArgsConstructor
 public class AutenticationService {
-
     private final UserRepository userRepository;
-
     private final PasswordEncoder passwordEncoder;
-
     private final OrderRepository orderRepository;
 
     public void register(String name, String password, String email) {
@@ -55,7 +51,6 @@ public class AutenticationService {
                 .status(Status.WHISHLIST)
                 .orderProductsList(new ArrayList<>())
                 .build();
-
         orderRepository.save(cart);
         orderRepository.save(wishlist);
     }
@@ -65,19 +60,14 @@ public class AutenticationService {
         if (user == null) {
             throw new UsernameNotFoundException("User with username " + username + " not found");
         }
-
         if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Wrong password");
         } else {
-
             List<GrantedAuthority> authorities = Stream.of(user.getRole()).map(role -> new SimpleGrantedAuthority(role.name()))
                     .collect(Collectors.toList());
-
             Authentication authentication = new UsernamePasswordAuthenticationToken(username, password, authorities);
-
             SecurityContext context = SecurityContextHolder.getContext();
             context.setAuthentication(authentication);
-
             SecurityContextHolder.setContext(context);
             HttpSession session = request.getSession(true);
             session.setAttribute("SPRING_SECURITY_CONTEXT", context);
@@ -111,7 +101,6 @@ public class AutenticationService {
         user.setEmail(newMail);
         userRepository.save(user);
         System.out.println("User details changed");
-
         createSession(request, user);
     }
 
@@ -119,10 +108,8 @@ public class AutenticationService {
         List<GrantedAuthority> authorities = Stream.of(user.getRole()).map(role -> new SimpleGrantedAuthority(role.name()))
                 .collect(Collectors.toList());
         Authentication authentication = new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword(), authorities);
-
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
-
         SecurityContextHolder.setContext(context);
         HttpSession session = request.getSession(true);
         session.setAttribute("SPRING_SECURITY_CONTEXT", context);
@@ -136,9 +123,6 @@ public class AutenticationService {
         }
         user.setPassword(passwordEncoder.encode(newPassword));
         userRepository.save(user);
-
         createSession(request, user);
     }
-
-
 }

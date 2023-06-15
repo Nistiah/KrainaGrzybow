@@ -15,14 +15,10 @@ public class OrderProduct {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
     @NotNull
     @ManyToOne(cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @JoinColumn(name = "products_id")
     private Product product;
-
     @Column(name = "quantity")
     private Integer quantity;
-
-
 }

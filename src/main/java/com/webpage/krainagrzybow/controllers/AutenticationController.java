@@ -9,16 +9,16 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 @Controller
 @CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 @RequestMapping("/autentication")
 public class AutenticationController {
-
     private final AutenticationService autenticationService;
 
     @PostMapping("/register")
@@ -26,14 +26,11 @@ public class AutenticationController {
         if (request.getUsername().isEmpty() || request.getPassword().isEmpty() || request.getEmail().isEmpty()) {
             return ResponseEntity.badRequest().body("All fields must be filled");
         }
-
         if (request.getUsername().length() < 6) {
             return ResponseEntity.badRequest().body("Username must be at least 6 characters long");
         }
-
         autenticationService.register(request.getUsername(), request.getPassword(), request.getEmail());
         autenticationService.logIn(request2, request.getUsername(), request.getPassword());
-
         return ResponseEntity.ok("Registration successful");
     }
 

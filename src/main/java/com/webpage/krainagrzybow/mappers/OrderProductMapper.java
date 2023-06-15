@@ -6,7 +6,6 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class OrderProductMapper {
-
     public OrderProductDto mapToDto(OrderProduct orderProduct) {
         return OrderProductDto
                 .builder()

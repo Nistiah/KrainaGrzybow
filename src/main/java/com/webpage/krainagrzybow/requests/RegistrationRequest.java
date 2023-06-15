@@ -1,4 +1,5 @@
 package com.webpage.krainagrzybow.requests;
+
 import lombok.*;
 
 @Getter
@@ -10,6 +11,5 @@ public class RegistrationRequest {
     private String username;
     private String password;
     private String email;
-
 }
 

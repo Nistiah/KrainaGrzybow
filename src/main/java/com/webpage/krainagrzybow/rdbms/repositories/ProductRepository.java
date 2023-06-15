@@ -11,7 +11,6 @@ import java.util.List;
 
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-
     Page<Product> findAllByDescriptionContainingAndIsDeleted(String description, Pageable pageable, boolean isDeleted);
 
     Page<Product> findAllByIsDeleted(boolean isDeleted, Pageable pageable);

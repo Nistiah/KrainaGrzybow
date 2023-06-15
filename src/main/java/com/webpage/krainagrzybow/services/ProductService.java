@@ -31,6 +31,24 @@ public class ProductService {
         return true;
     }
 
+    public void changeProduct(Long id, String name, String description, String image, BigDecimal price, BigDecimal promotion) {
+        Product product = productRepository.findById(id).orElse(null);
+        product.setName(name);
+        product.setDescription(description);
+        product.setImage(image);
+        product.setPrice(price);
+        product.setPromotion(promotion);
+        productRepository.save(product);
+    }
+
+    public void deleteProduct(Long id) {
+        Product product = productRepository.findById(id).orElse(null);
+        product.setDeleted(true);
+        productRepository.save(product);
+    }
+
+
+
     public void changePrice(Long id, BigDecimal price) {
         Product product = productRepository.findById(id).orElse(null);
         product.setPrice(price);

@@ -22,57 +22,89 @@ public class UserService {
 
     private final UserMapper userMapper;
 
-    public boolean addNewUser(String name, String email, String password, Role role) {
-        User user = new User();
-        user.setName(name);
-        user.setEmail(email);
-        user.setPassword(password);
+    public void changeUserRole(Long id, Role role) {
+        User user = userRepository.findById(id).orElse(null);
         user.setRole(role);
         userRepository.save(user);
-        return true;
     }
 
-    public UserDto findUserByEmail(String email) {
-        return userMapper.mapToDto(userRepository.findByEmail(email));
-    }
-
-    public UserDto findUserById(Long id) {
-        return userMapper.mapToDto(userRepository.findById(id).orElse(null));
-    }
-
-    public boolean changeName(Long id, String name) {
-        User user = userRepository.findById(id).orElse(null);
-        user.setName(name);
-        userRepository.save(user);
-        return true;
-    }
-
-    public boolean changePhoneNumber(Long id, String phoneNumber) {
-        User user = userRepository.findById(id).orElse(null);
-        user.setPhoneNumber(phoneNumber);
-        userRepository.save(user);
-        return true;
-    }
-
-    public boolean saveUser(User user) {
-        userRepository.save(user);
-        return true;
-
-    }
-    public Long countUsers() {
-        return userRepository.count();
-    }
-    public Long getUserIdByEmail(String email) {
-        return userRepository.findIdByEmail(email);
-    }
-    public void deleteUserById(Long id) {
+    public void deleteUser(Long id) {
         userRepository.deleteById(id);
     }
-    public List<UserDto> findAllUsers() {
-        return userRepository.findAll().stream().map(userMapper::mapToDto).toList();
-    }
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //TODO: oddzielnik
+
+//    public boolean addNewUser(String name, String email, String password, Role role) {
+//        User user = new User();
+//        user.setName(name);
+//        user.setEmail(email);
+//        user.setPassword(password);
+//        user.setRole(role);
+//        userRepository.save(user);
+//        return true;
+//    }
+//
+//    public UserDto findUserByEmail(String email) {
+//        return userMapper.mapToDto(userRepository.findByEmail(email));
+//    }
+//
+//    public UserDto findUserById(Long id) {
+//        return userMapper.mapToDto(userRepository.findById(id).orElse(null));
+//    }
+//
+//    public boolean changeName(Long id, String name) {
+//        User user = userRepository.findById(id).orElse(null);
+//        user.setName(name);
+//        userRepository.save(user);
+//        return true;
+//    }
+//
+//    public boolean changePhoneNumber(Long id, String phoneNumber) {
+//        User user = userRepository.findById(id).orElse(null);
+//        user.setPhoneNumber(phoneNumber);
+//        userRepository.save(user);
+//        return true;
+//    }
+//
+//    public boolean saveUser(User user) {
+//        userRepository.save(user);
+//        return true;
+//
+//    }
+//    public Long countUsers() {
+//        return userRepository.count();
+//    }
+//    public Long getUserIdByEmail(String email) {
+//        return userRepository.findIdByEmail(email);
+//    }
+//    public void deleteUserById(Long id) {
+//        userRepository.deleteById(id);
+//    }
+//    public List<UserDto> findAllUsers() {
+//        return userRepository.findAll().stream().map(userMapper::mapToDto).toList();
+//    }
+//
+//
 
 
 }

@@ -20,7 +20,6 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 public class AutenticationController {
 
     private final AutenticationService autenticationService;
-    String error = "";
 
     @PostMapping("/register")
     public ResponseEntity<String> signUp(HttpServletRequest request2, @RequestBody RegistrationRequest request) {
@@ -67,12 +66,4 @@ public class AutenticationController {
             return ResponseEntity.badRequest().body(e.getMessage());
         }
     }
-
-
-    @RequestMapping(value = "/redirect", method = RequestMethod.GET)
-    public String redirectToPage(RedirectAttributes redirectAttributes) {
-        redirectAttributes.addFlashAttribute("alertMessage", error);
-        return "redirect:/user/myAccount";
-    }
-
 }

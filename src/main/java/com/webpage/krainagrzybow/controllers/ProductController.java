@@ -19,7 +19,6 @@ import java.util.List;
 @Controller
 @CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
-//@ConfigurationProperties("items")
 @RequestMapping("/products")
 public class ProductController {
 

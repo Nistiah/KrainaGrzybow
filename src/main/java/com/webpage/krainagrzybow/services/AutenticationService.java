@@ -36,8 +36,7 @@ public class AutenticationService {
     private final OrderRepository orderRepository;
 
     public void register(String name, String password, String email) {
-
-        if(userRepository.existsByEmail(email)){
+        if (userRepository.existsByEmail(email)) {
             throw new RuntimeException("User with email " + email + " already exists");
         }
         User user = new User();
@@ -59,23 +58,22 @@ public class AutenticationService {
 
         orderRepository.save(cart);
         orderRepository.save(wishlist);
-
     }
 
     public void logIn(HttpServletRequest request, String username, String password) {
         User user = userRepository.findByUsername(username);
-        if(user == null){
+        if (user == null) {
             throw new UsernameNotFoundException("User with username " + username + " not found");
         }
 
-        if(!passwordEncoder.matches(password, user.getPassword())){
+        if (!passwordEncoder.matches(password, user.getPassword())) {
             throw new RuntimeException("Wrong password");
-        }else{
+        } else {
 
             List<GrantedAuthority> authorities = Stream.of(user.getRole()).map(role -> new SimpleGrantedAuthority(role.name()))
                     .collect(Collectors.toList());
 
-            Authentication authentication = new UsernamePasswordAuthenticationToken(username,password,authorities);
+            Authentication authentication = new UsernamePasswordAuthenticationToken(username, password, authorities);
 
             SecurityContext context = SecurityContextHolder.getContext();
             context.setAuthentication(authentication);
@@ -83,15 +81,14 @@ public class AutenticationService {
             SecurityContextHolder.setContext(context);
             HttpSession session = request.getSession(true);
             session.setAttribute("SPRING_SECURITY_CONTEXT", context);
-
         }
     }
 
-    public User getLoggedUser(){
+    public User getLoggedUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if(authentication == null){
+        if (authentication == null) {
             System.out.println("Authentication is null");
-        }else{
+        } else {
             System.out.println("Authentication is not null " + authentication.getName());
         }
         assert authentication != null;
@@ -102,11 +99,11 @@ public class AutenticationService {
     public void changeUserDetails(HttpServletRequest request, String newUsername, String password, String newMail) {
         System.out.println("Changing user details");
         User user = userRepository.findByUsername(newUsername);
-        if(user != null){
+        if (user != null) {
             throw new RuntimeException("Username taken");
         }
         String correctPassword = getLoggedUser().getPassword();
-        if(!passwordEncoder.matches(password, correctPassword)){
+        if (!passwordEncoder.matches(password, correctPassword)) {
             throw new RuntimeException("Wrong password");
         }
         user = getLoggedUser();
@@ -121,7 +118,7 @@ public class AutenticationService {
     private void createSession(HttpServletRequest request, User user) {
         List<GrantedAuthority> authorities = Stream.of(user.getRole()).map(role -> new SimpleGrantedAuthority(role.name()))
                 .collect(Collectors.toList());
-        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getName(),user.getPassword(),authorities);
+        Authentication authentication = new UsernamePasswordAuthenticationToken(user.getName(), user.getPassword(), authorities);
 
         SecurityContext context = SecurityContextHolder.getContext();
         context.setAuthentication(authentication);
@@ -134,7 +131,7 @@ public class AutenticationService {
     public void changeUserPassword(HttpServletRequest request, String oldPassword, String newPassword) {
         User user = getLoggedUser();
         String correctPassword = user.getPassword();
-        if(!passwordEncoder.matches(oldPassword, correctPassword)){
+        if (!passwordEncoder.matches(oldPassword, correctPassword)) {
             throw new RuntimeException("Wrong password");
         }
         user.setPassword(passwordEncoder.encode(newPassword));
@@ -142,7 +139,6 @@ public class AutenticationService {
 
         createSession(request, user);
     }
-
 
 
 }

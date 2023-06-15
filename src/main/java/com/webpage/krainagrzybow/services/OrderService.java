@@ -19,29 +19,12 @@ public class OrderService {
 
     private final OrderMapper orderMapper;
 
-    public Order saveOrder(Order order) {
-        return orderRepository.save(order);
+    public Order getShoppingCart(Long userId) {
+        return orderRepository.findByUserIdAndStatus(userId, Status.SHOPPING_CART);
     }
 
-    public void deleteOrderById(Long id) {
-        orderRepository.deleteById(id);
-    }
-
-    public List<OrderDto> findAllOrders() {
-        return orderRepository.findAll().stream().map(orderMapper::mapToDto).toList();
-    }
-
-    public OrderDto findOrderById(Long id) {
-        return orderMapper.mapToDto(orderRepository.findById(id).orElse(null));
-    }
-
-    public OrderDto getCartByUserId(Long id) {
-
-            return orderMapper.mapToDto(orderRepository.findByUserIdAndStatus(id, Status.NEW));
-
-//        return orderRepository.findByUserIdAndStatus(id, Status.NEW);
-
-//        return orderRepository.findByUserIdAndStatus(id,  Status.NEW);
+    public Order getWishList(Long userId) {
+        return orderRepository.findByUserIdAndStatus(userId, Status.WHISHLIST);
     }
 
 

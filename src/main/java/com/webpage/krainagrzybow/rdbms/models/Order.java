@@ -6,6 +6,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -25,7 +26,7 @@ public class Order {
     @NotNull
     @OneToMany
     @JoinColumn(name = "order_products_id")
-    private List<OrderProduct> orderProductsList;
+    private List<OrderProduct> orderProductsList = new ArrayList<>();
     @Column(name = "status")
     private Status status;
     @Column(name = "total_price")

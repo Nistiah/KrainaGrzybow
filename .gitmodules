@@ -1,0 +1,3 @@
+[submodule "InvoiceGenerator"]
+	path = InvoiceGenerator
+	url = https://github.com/Nistiah/InvoiceGenerator

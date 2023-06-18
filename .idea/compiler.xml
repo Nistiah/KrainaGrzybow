@@ -7,6 +7,7 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
+        <module name="InvoiceGenerator" />
         <module name="kraina-grzybow" />
         <module name="KrainaGrzybow" />
       </profile>

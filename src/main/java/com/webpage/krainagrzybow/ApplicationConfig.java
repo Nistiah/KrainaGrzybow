@@ -11,6 +11,7 @@ import com.webpage.krainagrzybow.rdbms.repositories.OrderRepository;
 import com.webpage.krainagrzybow.rdbms.repositories.ProductRepository;
 import com.webpage.krainagrzybow.rdbms.repositories.UserRepository;
 import com.webpage.krainagrzybow.services.OrderProductService;
+import com.webpage.krainagrzybow.services.OrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,8 @@ public class ApplicationConfig implements WebMvcConfigurer {
     private final ProductRepository productRepository;
     private final UserRepository userRepository;
     private final OrderRepository orderRepository;
+
+    private final OrderService orderService;
     private final OrderProductRepository orderProductRepository;
     private final OrderProductService orderProductService;
 
@@ -89,6 +92,11 @@ public class ApplicationConfig implements WebMvcConfigurer {
             orderProductService.addOrderProductToOrder(orderProduct, order);
             orderProductService.addOrderProductToOrder(orderProduct2, order);
             orderRepository.save(order);
+            order.addOrderProduct(orderProduct);
+            order.addOrderProduct(orderProduct2);
+            orderRepository.save(order);
+
+//            orderService.sendInvoice(order.getId());
         };
     }
 }

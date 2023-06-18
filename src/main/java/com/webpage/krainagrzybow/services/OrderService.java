@@ -10,7 +10,9 @@ import com.webpage.krainagrzybow.rdbms.repositories.OrderProductRepository;
 import com.webpage.krainagrzybow.rdbms.repositories.OrderRepository;
 import com.webpage.krainagrzybow.rdbms.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
+import org.example.invoicegenerator.*;
 import org.springframework.stereotype.Service;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -119,5 +121,38 @@ public class OrderService {
         whishList.removeOrderProduct(whishList.getOrderProductByProductId(id));
         orderRepository.save(whishList);
     }
+
+    //FIXME: do bazy trzeba bedzie dac chyba
+    long counter = 0;
+
+    public void sendInvoice(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow();
+        List<ProductGen> products = new ArrayList<>();
+        for (OrderProduct orderProduct : order.getOrderProductsList()) {
+            products.add(new ProductGen(orderProduct.getProduct().getName(),null,UnitOfMeasure.GRAM,orderProduct.getQuantity(), orderProduct.getProduct().getPrice().doubleValue(), 0.23 ));
+        }
+
+        InvoiceGenerator invoiceGenerator = new InvoiceGenerator(
+                order.getDate(),
+                counter,
+                new SellerInfo("Kraina Grzybów", "ul. Grzybowa 1", "Warszawa", "00-000", "019283", "0000 1111 2222 3333", "+048 111111111"),
+                new BuyerInfo(order.getUser().getName() + " ", order.getAddress(), order.getAddress(), order.getAddress(), order.getPhoneNumber()),
+                new ReceiverInfo(order.getUser().getName() + " ", order.getAddress(), order.getAddress(), order.getAddress()),
+                products);
+
+        invoiceGenerator.generateInvoice("output.pdf");
+
+
+//        InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+
+//        InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+
+//        order.setStatus(Status.INVOICE_SENT);
+//        orderRepository.save(order);
+//    }
+
+    }
+
+
 }
 

@@ -1,6 +1,7 @@
 package com.webpage.krainagrzybow.controllers;
 
 import com.webpage.krainagrzybow.enums.Role;
+import com.webpage.krainagrzybow.services.OrderService;
 import com.webpage.krainagrzybow.services.ProductService;
 import com.webpage.krainagrzybow.services.UserService;
 import lombok.RequiredArgsConstructor;
@@ -27,6 +28,7 @@ import java.util.Objects;
 public class AdminController {
     private final ProductService productService;
     private final UserService userService;
+    private final OrderService orderService;
 
     @RequestMapping(value = "/addProduct", method = RequestMethod.POST)
     public ResponseEntity<String> addProduct(@RequestParam String name, @RequestParam String description, @RequestParam String price, @RequestParam String image, @RequestParam String promotion) {
@@ -67,5 +69,18 @@ public class AdminController {
     public ResponseEntity<String> deleteUser(@RequestParam Long id) {
         userService.deleteUser(id);
         return ResponseEntity.ok("User deleted successfully");
+    }
+
+    @RequestMapping(value = "/sendInvoice", method = RequestMethod.GET)
+    public ResponseEntity<String> sendInvoice(@RequestParam String emailTo, @RequestParam Long orderId, @RequestParam String name, @RequestParam String adressStreet,
+                                              @RequestParam String adressCity, @RequestParam String adressZipCode, @RequestParam String nip) {
+        orderService.sendInvoice(emailTo, orderId, name, adressStreet, adressCity, adressZipCode, nip);
+        return ResponseEntity.ok("Sended Invoice successfully");
+    }
+
+    @RequestMapping(value = "/getInvoice", method = RequestMethod.GET)
+    public ResponseEntity<String> getInvoice(@RequestParam Long orderId, @RequestParam String name, @RequestParam String adressStreet,
+                                             @RequestParam String adressCity, @RequestParam String adressZipCode, @RequestParam String nip) {
+        return ResponseEntity.ok(orderService.getInvoice(orderId, name, adressStreet, adressCity, adressZipCode, nip));
     }
 }

@@ -1,6 +1,7 @@
 package com.webpage.krainagrzybow.services;
 
 import com.webpage.krainagrzybow.enums.Status;
+import com.webpage.krainagrzybow.mail.ClientWithJakarta;
 import com.webpage.krainagrzybow.mappers.OrderMapper;
 import com.webpage.krainagrzybow.rdbms.models.Order;
 import com.webpage.krainagrzybow.rdbms.models.OrderProduct;
@@ -9,6 +10,7 @@ import com.webpage.krainagrzybow.rdbms.models.User;
 import com.webpage.krainagrzybow.rdbms.repositories.OrderProductRepository;
 import com.webpage.krainagrzybow.rdbms.repositories.OrderRepository;
 import com.webpage.krainagrzybow.rdbms.repositories.ProductRepository;
+import jakarta.mail.MessagingException;
 import lombok.RequiredArgsConstructor;
 import org.example.invoicegenerator.*;
 import org.springframework.stereotype.Service;
@@ -125,7 +127,8 @@ public class OrderService {
     //FIXME: do bazy trzeba bedzie dac chyba
     long counter = 0;
 
-    public void sendInvoice(Long id) {
+    public void sendInvoice(String mailTo, Long id, String nameAndSurname, String addressStreet, String city, String postalCode, String nip)  {
+
         Order order = orderRepository.findById(id).orElseThrow();
         List<ProductGen> products = new ArrayList<>();
         for (OrderProduct orderProduct : order.getOrderProductsList()) {
@@ -136,22 +139,40 @@ public class OrderService {
                 order.getDate(),
                 counter,
                 new SellerInfo("Kraina Grzybów", "ul. Grzybowa 1", "Warszawa", "00-000", "019283", "0000 1111 2222 3333", "+048 111111111"),
-                new BuyerInfo(order.getUser().getName() + " ", order.getAddress(), order.getAddress(), order.getAddress(), order.getPhoneNumber()),
-                new ReceiverInfo(order.getUser().getName() + " ", order.getAddress(), order.getAddress(), order.getAddress()),
+                new BuyerInfo(nameAndSurname, addressStreet, city, postalCode, nip),
                 products);
 
-        invoiceGenerator.generateInvoice("output.pdf");
+        invoiceGenerator.generateInvoice("faktura"+id+".pdf");
+        ClientWithJakarta client = new ClientWithJakarta();
+        try {
+            client.sendMailWithAttachedPDF("faktura"+id+".pdf", mailTo);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
-//        InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+    public String getInvoice(Long id, String nameAndSurname, String addressStreet, String city, String postalCode, String nip)  {
 
-//        InvoiceGenerator invoiceGenerator = new InvoiceGenerator();
+        Order order = orderRepository.findById(id).orElseThrow();
+        List<ProductGen> products = new ArrayList<>();
+        for (OrderProduct orderProduct : order.getOrderProductsList()) {
+            products.add(new ProductGen(orderProduct.getProduct().getName(),null,UnitOfMeasure.GRAM,orderProduct.getQuantity(), orderProduct.getProduct().getPrice().doubleValue(), 0.23 ));
+        }
 
-//        order.setStatus(Status.INVOICE_SENT);
-//        orderRepository.save(order);
-//    }
+        InvoiceGenerator invoiceGenerator = new InvoiceGenerator(
+                order.getDate(),
+                counter,
+                new SellerInfo("Kraina Grzybów", "ul. Grzybowa 1", "Warszawa", "00-000", "019283", "0000 1111 2222 3333", "+048 111111111"),
+                new BuyerInfo(nameAndSurname, addressStreet, city, postalCode, nip),
+                products);
+
+        invoiceGenerator.generateInvoice("faktura"+id+".pdf");
+        return "faktura"+id+".pdf";
 
     }
+
+
 
 
 }

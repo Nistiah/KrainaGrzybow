@@ -20,6 +20,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 @Configuration
 @RequiredArgsConstructor
@@ -94,9 +95,10 @@ public class ApplicationConfig implements WebMvcConfigurer {
             orderRepository.save(order);
             order.addOrderProduct(orderProduct);
             order.addOrderProduct(orderProduct2);
+            order.setDate(LocalDate.now());
             orderRepository.save(order);
 
-//            orderService.sendInvoice(order.getId());
+            orderService.sendInvoice("paspatryk12@gmail.com",order.getId(), "Patrigo", "ul. Przedszkolna 1", "00-000", "Warszawa", "1234567890");
         };
     }
 }

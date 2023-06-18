@@ -24,7 +24,7 @@ public class Order {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
     @NotNull
-    @OneToMany
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
     @JoinColumn(name = "order_products_id")
     private List<OrderProduct> orderProductsList = new ArrayList<>();
     @Column(name = "status")

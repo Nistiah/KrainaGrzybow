@@ -1,7 +1,8 @@
 package com.webpage.krainagrzybow.enums;
 
 public enum Status {
-    NEW,
+    WHISHLIST,
+    SHOPPING_CART,
     IN_PROGRESS,
     DONE,
     CANCELED

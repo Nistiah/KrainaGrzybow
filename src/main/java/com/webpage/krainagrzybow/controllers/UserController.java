@@ -2,85 +2,108 @@ package com.webpage.krainagrzybow.controllers;
 
 import com.webpage.krainagrzybow.dtos.OrderDto;
 import com.webpage.krainagrzybow.dtos.UserDto;
-import com.webpage.krainagrzybow.rdbms.models.Order;
+import com.webpage.krainagrzybow.mappers.OrderMapper;
+import com.webpage.krainagrzybow.mappers.UserMapper;
+import com.webpage.krainagrzybow.services.AutenticationService;
 import com.webpage.krainagrzybow.services.OrderService;
+import com.webpage.krainagrzybow.services.ProductService;
 import com.webpage.krainagrzybow.services.UserService;
+import jakarta.servlet.http.HttpServletRequest;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
-import lombok.RequiredArgsConstructor;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@CrossOrigin(origins = "http://localhost:4200")
 @RequiredArgsConstructor
 @RequestMapping("/client")
 public class UserController {
-
     private final UserService userService;
-
+    private final ProductService productService;
+    private final UserMapper userMapper;
+    private final OrderMapper orderMapper;
     private final OrderService orderService;
+    private final AutenticationService autenticationService;
 
-    @Controller
-    @RequestMapping("/client/account")
-    public class ProfileController {
-
-        @GetMapping("/accountData/{userId}")
-        public ResponseEntity<UserDto> getAccountData(@PathVariable Long userId) {
-            try {
-                return ResponseEntity.ok(userService.findUserById(userId));
-            } catch (Exception e) {
-                System.out.println("dupsko");
-                e.printStackTrace();
-                return ResponseEntity.notFound().build();
-            }
-        }
-
-        @GetMapping("/test")
-        public ResponseEntity<String> test() {
-            return ResponseEntity.ok("test");
-        }
-
-        @PostMapping("/changeName")
-        public ResponseEntity<String> changeName(@RequestParam Long userId, @RequestParam String newName) {
-            try {
-                userService.changeName(userId, newName);
-                return ResponseEntity.ok("Name changed");
-            } catch (Exception e) {
-                return ResponseEntity.notFound().build();
-            }
-        }
-
-        @PostMapping("/changePhoneNumber")
-        public ResponseEntity<String> changePhoneNumber(@RequestParam Long userId, @RequestParam String newPhoneNumber) {
-            try {
-                userService.changePhoneNumber(userId, newPhoneNumber);
-                return ResponseEntity.ok("Phone number changed");
-            } catch (Exception e) {
-                return ResponseEntity.notFound().build();
-            }
+    @RequestMapping(value = "/myAccount", method = RequestMethod.GET)
+    public ResponseEntity<UserDto> showMyAccountPage(Model model, @RequestParam(required = false) String error, @RequestParam(required = false) String success) {
+        if (autenticationService.getLoggedUser() != null) {
+            return ResponseEntity.ok(userMapper.mapToDto(autenticationService.getLoggedUser()));
+        } else {
+            return ResponseEntity.badRequest().body(null);
         }
     }
 
-    //TODO: implement cart
-    @Controller
-    @RequestMapping("/client/cart")
-    public class CartController {
-
-        @GetMapping("/cartData/{userId}")
-        public ResponseEntity<OrderDto> getCartData(@PathVariable Long userId) {
-            try {
-                return ResponseEntity.ok(orderService.getCartByUserId(userId));
-            } catch (Exception e) {
-                System.out.println("dupsko");
-                e.printStackTrace();
-                return ResponseEntity.notFound().build();
-            }
+    @RequestMapping(value = "/cart", method = RequestMethod.GET)
+    public ResponseEntity<OrderDto> showCartPage(Model model) {
+        if (autenticationService.getLoggedUser() != null) {
+            return ResponseEntity.ok(orderMapper.mapToDto(orderService.getShoppingCart(autenticationService.getLoggedUser().getId())));
+        } else {
+            return ResponseEntity.badRequest().body(null);
         }
+    }
 
-        @GetMapping("/test")
-        public ResponseEntity<String> test() {
-            return ResponseEntity.ok("test");
+    @RequestMapping(value = "/addToCart", method = RequestMethod.POST)
+    public ResponseEntity<String> addToCart(@RequestParam("productId") Long productId) {
+        if (autenticationService.getLoggedUser() != null) {
+            orderService.addToCart(productId);
+            return ResponseEntity.ok("Product added to cart");
+        } else {
+            return ResponseEntity.badRequest().body("You need to be logged in to add product to cart");
         }
+    }
 
+    @RequestMapping(value = "/removeFromCart", method = RequestMethod.POST)
+    public ResponseEntity<String> removeItemFromCart(@RequestParam("productId") Long productId) {
+        if (autenticationService.getLoggedUser() != null) {
+            orderService.removeFromCart(productId);
+            return ResponseEntity.ok("Product removed from cart");
+        } else {
+            return ResponseEntity.badRequest().body("You need to be logged in to add product to cart");
+        }
+    }
 
+    @RequestMapping(value = "/wishlist", method = RequestMethod.GET)
+    public ResponseEntity<OrderDto> showWishlistPage(Model model) {
+        if (autenticationService.getLoggedUser() != null) {
+            return ResponseEntity.ok(orderMapper.mapToDto(orderService.getWishList(autenticationService.getLoggedUser().getId())));
+        } else {
+            return ResponseEntity.badRequest().body(null);
+        }
+    }
+
+    @RequestMapping(value = "/addToWishList", method = RequestMethod.POST)
+    public ResponseEntity<String> addToWishList(@RequestParam("productId") Long productId, Model model, HttpServletRequest request) {
+        if (autenticationService.getLoggedUser() != null) {
+            orderService.addToWishList(productId);
+            return ResponseEntity.ok("Product added to wishlist");
+        } else {
+            return ResponseEntity.badRequest().body("You need to be logged in to add product to wishlist");
+        }
+    }
+
+    @RequestMapping(value = "/removeFromWishlist", method = RequestMethod.POST)
+    public ResponseEntity<String> removeItemFromWishlist(@RequestParam("productId") Long productId, Model model) {
+        if (autenticationService.getLoggedUser() != null) {
+            orderService.removeFromWishList(productId);
+            return ResponseEntity.ok("Product removed from wishlist");
+        } else {
+            return ResponseEntity.badRequest().body("You need to be logged in to remove product from wishlist");
+        }
+    }
+
+    @RequestMapping(value = "/order", method = RequestMethod.POST)
+    public ResponseEntity<String> order(@RequestParam("orderId") Long productId) {
+        if (autenticationService.getLoggedUser() != null) {
+            orderService.order(productId);
+            return ResponseEntity.ok("Successfully ordered");
+        } else {
+            return ResponseEntity.badRequest().body("You need to be logged in to place order");
+        }
     }
 }

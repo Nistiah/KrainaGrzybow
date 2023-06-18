@@ -12,7 +12,6 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 public class OrderProductDto {
-
     private BigDecimal price;
     private String productName;
     private Long productId;

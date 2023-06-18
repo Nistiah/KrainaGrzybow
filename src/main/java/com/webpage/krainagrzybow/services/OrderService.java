@@ -1,50 +1,123 @@
 package com.webpage.krainagrzybow.services;
 
-import com.webpage.krainagrzybow.dtos.OrderDto;
 import com.webpage.krainagrzybow.enums.Status;
 import com.webpage.krainagrzybow.mappers.OrderMapper;
 import com.webpage.krainagrzybow.rdbms.models.Order;
+import com.webpage.krainagrzybow.rdbms.models.OrderProduct;
+import com.webpage.krainagrzybow.rdbms.models.Product;
+import com.webpage.krainagrzybow.rdbms.models.User;
+import com.webpage.krainagrzybow.rdbms.repositories.OrderProductRepository;
 import com.webpage.krainagrzybow.rdbms.repositories.OrderRepository;
+import com.webpage.krainagrzybow.rdbms.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class OrderService {
-
     private final OrderRepository orderRepository;
-
     private final OrderMapper orderMapper;
+    private final OrderProductRepository orderProductRepository;
+    private final AutenticationService autenticationService;
+    private final ProductRepository productRepository;
 
-    public Order saveOrder(Order order) {
-        return orderRepository.save(order);
+    public Order getShoppingCart(Long userId) {
+        return orderRepository.findByUserIdAndStatus(userId, Status.SHOPPING_CART);
     }
 
-    public void deleteOrderById(Long id) {
-        orderRepository.deleteById(id);
+    public Order getWishList(Long userId) {
+        return orderRepository.findByUserIdAndStatus(userId, Status.WHISHLIST);
     }
 
-    public List<OrderDto> findAllOrders() {
-        return orderRepository.findAll().stream().map(orderMapper::mapToDto).toList();
+    public int getNumberOfProductsInCart(User user) {
+        try {
+            deleteOrderProductsIfProductIsDeleted(orderRepository.findByStatusAndUserId(Status.SHOPPING_CART, user.getId()).get());
+            return orderRepository.findByStatusAndUserId(Status.SHOPPING_CART, user.getId()).get().getOrderProductsList().size();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
-    public OrderDto findOrderById(Long id) {
-        return orderMapper.mapToDto(orderRepository.findById(id).orElse(null));
+    public int getNumberOfProductsInWishlist(User user) {
+        try {
+            deleteOrderProductsIfProductIsDeleted(orderRepository.findByStatusAndUserId(Status.WHISHLIST, user.getId()).get());
+            return orderRepository.findByStatusAndUserId(Status.WHISHLIST, user.getId()).get().getOrderProductsList().size();
+        } catch (Exception e) {
+            return 0;
+        }
     }
 
-    public OrderDto getCartByUserId(Long id) {
-
-            return orderMapper.mapToDto(orderRepository.findByUserIdAndStatus(id, Status.NEW));
-
-//        return orderRepository.findByUserIdAndStatus(id, Status.NEW);
-
-//        return orderRepository.findByUserIdAndStatus(id,  Status.NEW);
+    public void order(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow();
+        order.setStatus(Status.IN_PROGRESS);
+        orderRepository.save(order);
+        User user = order.getUser();
+        Order cart = Order.builder()
+                .user(user)
+                .status(Status.SHOPPING_CART)
+                .orderProductsList(new ArrayList<>())
+                .build();
+        orderRepository.save(cart);
     }
 
+    public void deleteOrderProductsIfProductIsDeleted(Order order) {
+        List<OrderProduct> orderProducts = order.getOrderProductsList();
+        for (OrderProduct orderProduct : orderProducts) {
+            if (orderProduct.getProduct().isDeleted()) {
+                orderProductRepository.delete(orderProduct);
+            }
+        }
+    }
 
+    public void addToCart(Long id) {
+        Long userId = autenticationService.getLoggedUser().getId();
+        Order cart = orderRepository.findByStatusAndUserId(Status.SHOPPING_CART, userId).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow();
+        if (cart.isProductInOrder(id)) {
+            cart.getOrderProductByProductId(id).setQuantity(cart.getOrderProductByProductId(id).getQuantity() + 1);
+            orderProductRepository.save(cart.getOrderProductByProductId(id));
+            return;
+        }
+        OrderProduct orderProduct = OrderProduct.builder()
+                .product(product)
+                .quantity(1)
+                .build();
+        orderProductRepository.save(orderProduct);
+        cart.addOrderProduct(orderProduct);
+        orderRepository.save(cart);
+    }
 
+    public void removeFromCart(Long id) {
+        Long userId = autenticationService.getLoggedUser().getId();
+        Order cart = orderRepository.findByStatusAndUserId(Status.SHOPPING_CART, userId).orElseThrow();
+        cart.removeOrderProduct(cart.getOrderProductByProductId(id));
+        orderRepository.save(cart);
+    }
+
+    public void addToWishList(Long id) {
+        Long userId = autenticationService.getLoggedUser().getId();
+        Order wishList = orderRepository.findByStatusAndUserId(Status.WHISHLIST, userId).orElseThrow();
+        Product product = productRepository.findById(id).orElseThrow();
+        if (wishList.isProductInOrder(id)) {
+            return;
+        }
+        OrderProduct orderProduct = OrderProduct.builder()
+                .product(product)
+                .quantity(1)
+                .build();
+        orderProductRepository.save(orderProduct);
+        wishList.addOrderProduct(orderProduct);
+        orderRepository.save(wishList);
+    }
+
+    public void removeFromWishList(Long id) {
+        Long userId = autenticationService.getLoggedUser().getId();
+        Order whishList = orderRepository.findByStatusAndUserId(Status.WHISHLIST, userId).orElseThrow();
+        whishList.removeOrderProduct(whishList.getOrderProductByProductId(id));
+        orderRepository.save(whishList);
+    }
 }
 

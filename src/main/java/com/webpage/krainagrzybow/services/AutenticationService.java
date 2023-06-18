@@ -56,7 +56,7 @@ public class AutenticationService {
     }
 
     public void logIn(HttpServletRequest request, String username, String password) {
-        User user = userRepository.findByUsername(username);
+        User user = userRepository.findByName(username);
         if (user == null) {
             throw new UsernameNotFoundException("User with username " + username + " not found");
         }
@@ -83,12 +83,12 @@ public class AutenticationService {
         }
         assert authentication != null;
         String username = authentication.getPrincipal().toString();
-        return userRepository.findByUsername(username);
+        return userRepository.findByName(username);
     }
 
     public void changeUserDetails(HttpServletRequest request, String newUsername, String password, String newMail) {
         System.out.println("Changing user details");
-        User user = userRepository.findByUsername(newUsername);
+        User user = userRepository.findByName(newUsername);
         if (user != null) {
             throw new RuntimeException("Username taken");
         }

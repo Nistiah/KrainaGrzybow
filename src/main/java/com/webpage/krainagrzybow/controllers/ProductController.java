@@ -27,9 +27,9 @@ public class ProductController {
 
     //glowna strona z produktami
     @GetMapping("/MycologicalSea")
-    public ResponseEntity<Page<ProductDto>> getAllProducts(@RequestParam(defaultValue = "0") int page) {
-        Pageable pageable = PageRequest.of(page, 4);
-        Page<ProductDto> productsPage = productService.getAllProductsDto(pageable);
+    public ResponseEntity<List<ProductDto>> getAllProducts(@RequestParam(defaultValue = "0") int page) {
+
+        List<ProductDto> productsPage = productService.getAllProductsDto();
         return ResponseEntity.ok(productsPage);
     }
 

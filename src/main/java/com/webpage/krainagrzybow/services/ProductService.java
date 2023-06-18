@@ -7,6 +7,7 @@ import com.webpage.krainagrzybow.rdbms.repositories.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.io.File;
@@ -52,8 +53,8 @@ public class ProductService {
         return productMapper.mapToDto(product);
     }
 
-    public Page<ProductDto> getAllProductsDto(Pageable pageable) {
-        return productRepository.findAllByIsDeleted(false, pageable).map(productMapper::mapToDto);
+    public List<ProductDto> getAllProductsDto() {
+        return productRepository.findAllByIsDeleted(false, Sort.by(Sort.Direction.ASC, "id")).stream().map(productMapper::mapToDto).toList();
     }
 
     public List<String> getAllImages() {

@@ -21,6 +21,7 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
 
 @Configuration
 @RequiredArgsConstructor
@@ -37,68 +38,89 @@ public class ApplicationConfig implements WebMvcConfigurer {
     @Bean
     public CommandLineRunner commandLineRunner() {
         return args -> {
-            Product product = new Product();
-            product.setName("test");
-            product.setDescription("test");
-            product.setPrice(BigDecimal.valueOf(2.0));
-            product.setPromotion(BigDecimal.valueOf(1.0));
-            product.setImage("test");
-            Product product2 = new Product();
-            product2.setName("test2");
-            product2.setDescription("test2");
-            product2.setPrice(BigDecimal.valueOf(2.0));
-            product2.setPromotion(BigDecimal.valueOf(1.0));
-            product2.setImage("test2");
-            Product product3 = new Product();
-            product3.setName("test3");
-            product3.setDescription("test3");
-            product3.setPrice(BigDecimal.valueOf(2.0));
-            product3.setPromotion(BigDecimal.valueOf(1.0));
-            product3.setImage("test3");
-            Product product4 = new Product();
-            product4.setName("test4");
-            product4.setDescription("test4test4test4test4");
-            product4.setPrice(BigDecimal.valueOf(20.0));
-            product4.setPromotion(BigDecimal.valueOf(1.0));
-            product4.setImage("test4");
-            Product product5 = new Product();
-            product5.setName("test5");
-            product5.setDescription("product5product5product5");
-            product5.setPrice(BigDecimal.valueOf(200.0));
-            product5.setPromotion(BigDecimal.valueOf(1.0));
-            product5.setImage("test5");
-            productRepository.save(product);
-            productRepository.save(product2);
-            productRepository.save(product3);
-            productRepository.save(product4);
-            productRepository.save(product5);
-            User user = new User();
-            user.setName("admin");
-            user.setPassword("admin");
-            user.setRole(Role.ROLE_ADMIN);
-            user.setEmail("admin@admin.com");
+
+            String[] mushroomNames = {
+                    "Shiitake",
+                    "Portobello",
+                    "Chanterelle",
+                    "Morel",
+                    "Porcini",
+                    "Enoki",
+                    "Oyster",
+                    "Lion's Mane",
+                    "Maitake",
+                    "Button Mushroom",
+                    "Cremini",
+                    "King Trumpet",
+                    "Cordyceps",
+                    "Reishi",
+                    "Black Truffle",
+                    "White Truffle",
+                    "Hen of the Woods",
+                    "Wood Ear",
+                    "Lobster Mushroom",
+                    "Penny Bun"
+            };
+
+            for (int i = 0; i < 20; i++) {
+                String name = mushroomNames[i];
+                String description = "A delicious " + name + " mushroom";
+                BigDecimal price = BigDecimal.valueOf(Math.random() * (50.0) + 10.0);
+                String image = "psychedelic-mushrooms-limited-colors-pattern_739548-636.png";
+
+                Product product = Product.builder()
+                        .name(name)
+                        .description(description)
+                        .price(price)
+                        .image(image)
+                        .build();
+
+                productRepository.save(product);
+            }
+
+            User user = User.builder().name("admin").password("admin").role(Role.ROLE_ADMIN).email("paspatryk12@gmail.com").build();
             userRepository.save(user);
-            Order order = new Order();
-            order.setStatus(Status.SHOPPING_CART);
-            order.setUser(user);
-            orderRepository.save(order);
-            OrderProduct orderProduct = new OrderProduct();
-            orderProduct.setProduct(product);
-            orderProduct.setQuantity(2);
-            OrderProduct orderProduct2 = new OrderProduct();
-            orderProduct2.setProduct(product2);
-            orderProduct2.setQuantity(222);
+
+            Order cart = Order.builder()
+                    .user(user)
+                    .status(Status.SHOPPING_CART)
+                    .orderProductsList(new ArrayList<>())
+                    .date(LocalDate.now())
+                    .build();
+            Order wishlist = Order.builder()
+                    .user(user)
+                    .status(Status.WHISHLIST)
+                    .orderProductsList(new ArrayList<>())
+                    .build();
+            orderRepository.save(cart);
+            orderRepository.save(wishlist);
+
+            OrderProduct orderProduct = OrderProduct.builder()
+                    .product(productRepository.findById(1L).get())
+                    .quantity(2)
+                    .build();
+
+            OrderProduct orderProduct2 = OrderProduct.builder()
+                    .product(productRepository.findById(2L).get())
+                    .quantity(3)
+                    .build();
+
+            OrderProduct orderProduct3 = OrderProduct.builder()
+                    .product(productRepository.findById(3L).get())
+                    .quantity(7)
+                    .build();
+
             orderProductRepository.save(orderProduct);
             orderProductRepository.save(orderProduct2);
-            orderProductService.addOrderProductToOrder(orderProduct, order);
-            orderProductService.addOrderProductToOrder(orderProduct2, order);
-            orderRepository.save(order);
-            order.addOrderProduct(orderProduct);
-            order.addOrderProduct(orderProduct2);
-            order.setDate(LocalDate.now());
-            orderRepository.save(order);
+            orderProductRepository.save(orderProduct3);
 
-            orderService.sendInvoice("paspatryk12@gmail.com",order.getId(), "Patrigo", "ul. Przedszkolna 1", "00-000", "Warszawa", "1234567890");
+            orderProductService.addOrderProductToOrder(orderProduct, cart);
+            orderProductService.addOrderProductToOrder(orderProduct2, cart);
+            orderProductService.addOrderProductToOrder(orderProduct3, cart);
+
+            orderRepository.save(cart);
+
+//            orderService.sendInvoice("paspatryk12@gmail.com",cart.getId(), "Patrigo", "ul. Przedszkolna 1", "00-000", "Warszawa", "1234567890");
         };
     }
 }

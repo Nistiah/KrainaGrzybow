@@ -72,9 +72,8 @@ public class AdminController {
     }
 
     @RequestMapping(value = "/sendInvoice", method = RequestMethod.GET)
-    public ResponseEntity<String> sendInvoice(@RequestParam String emailTo, @RequestParam Long orderId, @RequestParam String name, @RequestParam String adressStreet,
-                                              @RequestParam String adressCity, @RequestParam String adressZipCode, @RequestParam String nip) {
-        orderService.sendInvoice(emailTo, orderId, name, adressStreet, adressCity, adressZipCode, nip);
+    public ResponseEntity<String> sendInvoice(@RequestParam Long orderId) {
+        orderService.sendInvoice("paspatryk12@gmail.com", orderId, "Patrigo", "ul. Przedszkolna 1", "00-000", "Warszawa", "1234567890");
         return ResponseEntity.ok("Sended Invoice successfully");
     }
 
